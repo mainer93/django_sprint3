@@ -10,6 +10,7 @@ class BaseModel(models.Model):
     Добавляет к модели флаг отображения публикации
     на странице блога и дату создания.
     """
+
     is_published = models.BooleanField(default=True,
                                        verbose_name='Опубликовано',
                                        help_text='Снимите галочку,'
