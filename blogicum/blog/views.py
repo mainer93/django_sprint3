@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 from django.db.models import Q
+from django.http import Http404
 
 from blog.models import Post, Category, Constants
 
@@ -23,10 +24,15 @@ def index(request):
 def post_detail(request, post_pk):
     template_name = 'blog/detail.html'
     post = get_object_or_404(
-        get_posts(), pk=post_pk
+        Post, pk=post_pk,
+        pub_date__lte=timezone.now(),
+        category__is_published=True
     )
-    context = {'post': post}
-    return render(request, template_name, context)
+    if request.user == post.author or post.is_published:
+        context = {'post': post}
+        return render(request, template_name, context)
+    raise Http404("У данного пользователя нет прав для просмотра"
+                  " данного неопубликованного поста")
 
 
 def category_posts(request, category_slug):
