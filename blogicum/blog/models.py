@@ -1,14 +1,9 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 
+from blog.constants import Constants
+
 User = get_user_model()
-
-
-class Constants:
-    CATEGORY_TITLE_MAX_LENGTH = 256
-    LOCATION_NAME_MAX_LENGTH = 256
-    POST_TITLE_MAX_LENGTH = 256
-    POST_LIMIT = 5
 
 
 class BaseModel(models.Model):
@@ -73,7 +68,8 @@ class Post(BaseModel):
                                  verbose_name='Местоположение')
     category = models.ForeignKey(Category, on_delete=models.SET_NULL,
                                  null=True, blank=False,
-                                 verbose_name='Категория')
+                                 verbose_name='Категория',
+                                 related_name='posts')
 
     class Meta:
         verbose_name = 'публикация'
